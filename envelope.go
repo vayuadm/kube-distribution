@@ -10,19 +10,19 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-type repository struct {
+type Repository struct {
 	Name string
 	Tag  string
 }
 
-func GetPushEventRepositories(envelope io.Reader) ([]repository, error) {
+func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
 
-	var ret []repository
+	var ret []Repository
 	events, err := toEvents(envelope);
 	if err == nil {
 		for _, currEvent := range events {
 			if currEvent.Action == "push" {
-				ret = append(ret, repository{Name:currEvent.Target.Repository, Tag:currEvent.Target.Tag})
+				ret = append(ret, Repository{Name:currEvent.Target.Repository, Tag:currEvent.Target.Tag})
 			}
 
 		}
