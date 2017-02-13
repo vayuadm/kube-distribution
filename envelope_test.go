@@ -10,20 +10,29 @@ import (
 
 func TestGetPushEventRepositories(t *testing.T) {
 
-	repositories := GetPushEventRepositories(getEventEnvelope())
+	repositories, err := GetPushEventRepositories(getEventEnvelope())
+	assert.NoError(t, err)
 	assert.Equal(t, 1, len(repositories))
 }
 
 func TestGetPushEventRepositories_NoPushEvents(t *testing.T) {
 
-	repositories := GetPushEventRepositories(getEventEnvelope_NoPushEvents())
+	repositories, err := GetPushEventRepositories(getEventEnvelope_NoPushEvents())
+	assert.NoError(t, err)
 	assert.Equal(t, 0, len(repositories))
 }
 
 func TestGetPushEventRepositories_EmptyEnvelop(t *testing.T) {
 
-	repositories := GetPushEventRepositories(strings.NewReader("{}"))
+	repositories, err := GetPushEventRepositories(strings.NewReader("{}"))
+	assert.NoError(t, err)
 	assert.Equal(t, 0, len(repositories))
+}
+
+func TestGetPushEventRepositories_CorruptedEnvelope(t *testing.T) {
+
+	_, err := GetPushEventRepositories(strings.NewReader("{"))
+	assert.Error(t, err)
 }
 
 func getEventEnvelope_NoPushEvents() io.Reader {
