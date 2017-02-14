@@ -40,14 +40,14 @@ func (kube KubeClient) UpdateDeployment(name, namespace, image string) {
 	}
 
 	if _, err := kube.api.Deployments(namespace).Update(
-		prepareKubeDeployment(deployments.Items[0], image)); err != nil {
+		prepareKubeDeployment(&deployments.Items[0], image)); err != nil {
 		log.Fatal("Failed to update deployment:", name, namespace, image, err)
 	}
 
 	log.Infof("Deployment %s has been updated to image %s (namespace %s)", name, namespace, image)
 }
 
-func prepareKubeDeployment(deployment v1beta1.Deployment, image string) *v1beta1.Deployment {
+func prepareKubeDeployment(deployment *v1beta1.Deployment, image string) *v1beta1.Deployment {
 
 	deployment.Spec.Template.Spec.Containers[0].Image = image
 	deployment.ObjectMeta.SetUID("")
