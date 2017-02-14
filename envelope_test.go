@@ -13,6 +13,8 @@ func TestGetPushEventRepositories(t *testing.T) {
 	repositories, err := GetPushEventRepositories(getEventEnvelope())
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(repositories))
+	assert.Equal(t, "vayuadm/ceribrou-ui", repositories[0].Name)
+	assert.Equal(t, "master-default-ceribrouideplyment-7", repositories[0].Tag)
 }
 
 func TestGetPushEventRepositories_NoPushEvents(t *testing.T) {
@@ -127,10 +129,11 @@ func getEventEnvelope() io.Reader {
 			 "timestamp": "2006-01-02T15:04:05Z",
 			 "action": "push",
 			 "target": {
+			    "tag": "master-default-ceribrouideplyment-7",
 			    "mediaType": "application/vnd.docker.container.image.rootfs.diff+x-gtar",
 			    "length": 2,
 			    "digest": "sha256:c3b3692957d439ac1928219a83fac91e7bf96c153725526874673ae1f2023f8d5",
-			    "repository": "library/test",
+			    "repository": "vayuadm/ceribrou-ui",
 			    "url": "http://example.com/v2/library/test/blobs/sha256:c3b3692957d439ac1928219a83fac91e7bf96c153725526874673ae1f2023f8d5"
 			 },
 			 "request": {
