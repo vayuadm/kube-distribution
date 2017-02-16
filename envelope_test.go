@@ -8,7 +8,7 @@ import (
 	"io"
 )
 
-func TestGetPushEventRepositories(t *testing.T) {
+func TestEnvelope_GetPushEventRepositories(t *testing.T) {
 
 	repositories, err := GetPushEventRepositories(getEventEnvelope())
 	assert.NoError(t, err)
@@ -17,21 +17,21 @@ func TestGetPushEventRepositories(t *testing.T) {
 	assert.Equal(t, "master-default-ceribrouideplyment-7", repositories[0].Tag)
 }
 
-func TestGetPushEventRepositories_NoPushEvents(t *testing.T) {
+func TestEnvelope_GetPushEventRepositories_NoPushEvents(t *testing.T) {
 
 	repositories, err := GetPushEventRepositories(getEventEnvelope_NoPushEvents())
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(repositories))
 }
 
-func TestGetPushEventRepositories_EmptyEnvelop(t *testing.T) {
+func TestEnvelope_GetPushEventRepositories_EmptyEnvelop(t *testing.T) {
 
 	repositories, err := GetPushEventRepositories(strings.NewReader("{}"))
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(repositories))
 }
 
-func TestGetPushEventRepositories_CorruptedEnvelope(t *testing.T) {
+func TestEnvelope_GetPushEventRepositories_CorruptedEnvelope(t *testing.T) {
 
 	_, err := GetPushEventRepositories(strings.NewReader("{"))
 	assert.Error(t, err)
