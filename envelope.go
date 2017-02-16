@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"errors"
 	"io"
+	"strings"
 
 	"github.com/docker/distribution/notifications"
 	log "github.com/Sirupsen/logrus"
@@ -17,12 +18,17 @@ type Repository struct {
 
 func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
 
+	log.Info("Parsing docker registry events...")
 	var ret []Repository
 	events, err := toEvents(envelope);
 	if err == nil {
 		for _, currEvent := range events {
-			if currEvent.Action == "push" {
-				ret = append(ret, Repository{Name:currEvent.Target.Repository, Tag:currEvent.Target.Tag})
+			log.Infof("Event: %s, Image: %s:%s", currEvent.Action,
+				currEvent.Target.Repository, currEvent.Target.Tag)
+			if strings.EqualFold(currEvent.Action, "push") {
+				ret = append(ret, Repository{
+					Name: currEvent.Target.Repository,
+					Tag: currEvent.Target.Tag})
 			}
 
 		}
