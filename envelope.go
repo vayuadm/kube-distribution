@@ -22,6 +22,7 @@ func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
 	var ret []Repository
 	events, err := toEvents(envelope);
 	if err == nil {
+		log.Infof("Found %d docker registry events", len(events))
 		for _, currEvent := range events {
 			log.Infof("Event: %s, Image: %s:%s", currEvent.Action,
 				currEvent.Target.Repository, currEvent.Target.Tag)
@@ -44,7 +45,6 @@ func toEvents(envelopeReader io.Reader) ([]notifications.Event, error) {
 	err := decoder.Decode(&envelope)
 	if err != nil {
 		message := fmt.Sprintf("Failed to decode docker registry event's envelope: %s", err)
-		log.Error(message)
 
 		return nil, errors.New(message)
 	}
