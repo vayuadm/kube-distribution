@@ -4,14 +4,15 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/lavalamp/client-go-flat/kubernetes"
 	"github.com/lavalamp/client-go-flat/rest"
-	"github.com/lavalamp/client-go-flat/apimachinery/pkg/apis/meta/v1"
 	"github.com/lavalamp/client-go-flat/pkg/apis/extensions/v1beta1"
+	"github.com/lavalamp/client-go-flat/apimachinery/pkg/apis/meta/v1"
 
 	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"os/user"
+	"strings"
 )
 
 const (
@@ -36,19 +37,34 @@ func NewKubeClient() KubeClient {
 
 func (kube KubeClient) UpdateDeployment(name, namespace, image string) error {
 
-	log.Infof("Updating deployment: %s image to %s (namespace: %s)", name, image, namespace)
-	deployments, err := kube.api.Deployments(namespace).List(v1.ListOptions{FieldSelector: name})
+	log.Infof("Loking for deployment: %s, namespace: %s", name, namespace)
+	deployment, err := findDeployment(name, namespace)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Failed to get deployment name: %s. %v", name, err))
+		return err
 	}
 
-	if _, err := kube.api.Deployments(namespace).Update(
-		prepareKubeDeployment(&deployments.Items[0], image)); err != nil {
+	log.Infof("Updating deployment: %s image to %s (namespace: %s)", name, image, namespace)
+	if _, err := kube.api.Deployments(namespace).Update(prepareKubeDeployment(deployment, image)); err != nil {
 		return errors.New(fmt.Sprintf("Failed to update deployment: %s (namespace: %s, image: %s). %v", name, namespace, image, err))
 	}
 	log.Infof("Deployment %s has been updated to image %s (namespace %s)", name, image, namespace)
 
 	return nil
+}
+
+func findDeployment(name, namespace string) (*v1beta1.Deployment, error) {
+
+	deployments, err := kube.api.Deployments(namespace).List(v1.ListOptions{})
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Failed to get deployments. %v", err))
+	}
+	for _, currDeployment := range deployments.Items {
+		if strings.EqualFold(currDeployment.Name, name) {
+			return &currDeployment, nil
+		}
+	}
+
+	return nil, errors.New(fmt.Sprintf("Deployment %s not found (namespace: %s).", name, namespace))
 }
 
 func prepareKubeDeployment(deployment *v1beta1.Deployment, image string) *v1beta1.Deployment {

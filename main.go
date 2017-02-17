@@ -18,7 +18,7 @@ var (
 func main() {
 
 	kube = NewKubeClient()
-	watchBranches = getWatchRepositories()
+	watchBranches = getWatchBranches()
 
 	http.HandleFunc("/events", handler)
 	http.ListenAndServe(":5050", nil)
@@ -37,12 +37,10 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 				continue
 			}
 
-			fmt.Println("branch: ", branch, " ur:", watchBranches)
 			if watchBranches.Contains(branch) {
 				image := fmt.Sprintf("%s:%s", currRepository.Name, version)
 				if err := kube.UpdateDeployment(deployment, namespace, image); err != nil {
-					log.Errorf("Failed to update deployment: %s, branch: %s, namespace: %s, image: %s",
-						deployment, branch, namespace, image, err)
+					log.Error(err)
 				}
 			}
 		}
@@ -62,7 +60,7 @@ func parseTag(tag string) (branch, namespace, deployment, version string, err er
 	return ret[0], ret[1], ret[2], ret[3], nil
 }
 
-func getWatchRepositories() Set {
+func getWatchBranches() Set {
 
 	ret := NewSet()
 	names := os.Getenv("WATCH_BRANCES")
@@ -73,7 +71,7 @@ func getWatchRepositories() Set {
 	} else {
 		ret.Add("master")
 	}
-	log.Info("Watch branches:", watchBranches.ToArray())
+	log.Info("Watch branches: ", ret.ToArray())
 
 	return ret
 }
