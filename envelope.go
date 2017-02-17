@@ -22,7 +22,7 @@ func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
 	var ret []Repository
 	events, err := toEvents(envelope);
 	if err == nil {
-		log.Infof("Found %d docker registry events", len(events))
+		log.Infof("Found %d docker registry event(s)", len(events))
 		for _, currEvent := range events {
 			log.Infof("Event: %s, Image: %s:%s", currEvent.Action,
 				currEvent.Target.Repository, currEvent.Target.Tag)
