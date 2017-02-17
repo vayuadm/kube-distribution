@@ -19,3 +19,13 @@ func (set Set) Contains(val string) bool {
 
 	return ok
 }
+
+func (set Set) ToArray() []string {
+
+	var ret []string
+	for key := range set.data {
+		ret = append(ret, key)
+	}
+
+	return ret
+}
