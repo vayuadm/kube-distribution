@@ -1,5 +1,7 @@
 # kube-distribution
 
+[![CircleCI](https://circleci.com/gh/vayuadm/kube-distribution.svg?style=svg)](https://circleci.com/gh/vayuadm/kube-distribution)
+
 _kube-distribution_ is a process that listen to docker registry push events events,
 and automatically run updated [Kubernetes Deployment](https://kubernetes.io/docs/user-guide/deployments/) with new pushed image.
 
