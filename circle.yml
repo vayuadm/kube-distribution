@@ -1,8 +1,5 @@
 version: 2
 executorType: docker
-environment:
-    PROJECT_NAME: kube-distribution
-    PROJECT_PATH: /go/src/github.com/gaia-docker/$PROJECT_NAME
 containerInfo:
   - image: ubuntu:16.04
     cmd: ["/bin/bash"]
