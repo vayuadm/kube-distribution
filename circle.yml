@@ -10,5 +10,6 @@ stages:
     workDir: ~/kube-distribution
     steps:
       - type: checkout
+      - type: shell
         shell: /bin/bash
         command: docker run --rm -v "$PWD":$PROJECT_PATH -w $PROJECT_PATH gaiadocker/base-go-build /go/script/go_build.sh $PROJECT_NAME
