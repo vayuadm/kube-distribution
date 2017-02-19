@@ -1,13 +1,13 @@
 package main
 
 import (
+	log "github.com/Sirupsen/logrus"
+
 	"net/http"
 	"fmt"
 	"strings"
 	"errors"
 	"os"
-
-	log "github.com/Sirupsen/logrus"
 )
 
 var (

@@ -1,0 +1,15 @@
+version: 2
+executorType: docker
+environment:
+    PROJECT_NAME: kube-distribution
+    PROJECT_PATH: /go/src/github.com/gaia-docker/$PROJECT_NAME
+containerInfo:
+  - image: ubuntu:16.04
+  - image: gaiadocker/base-go-build
+stages:
+  build:
+    workDir: ~/kube-distribution
+    steps:
+      - type: checkout
+        shell: /bin/bash
+        command: docker run --rm -v "$PWD":$PROJECT_PATH -w $PROJECT_PATH gaiadocker/base-go-build /go/script/go_build.sh $PROJECT_NAME
