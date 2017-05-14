@@ -17,7 +17,7 @@ func SendEvent(image, tag string) (response *http.Response, err error) {
 func getEventEnvelope(image, tag string) io.Reader {
 
 	envelope := strings.TrimSpace(`
-		{[{
+		{
 		  "push_data": {
 		    "pushed_at": 1494748295,
 		    "images": [],
@@ -41,8 +41,8 @@ func getEventEnvelope(image, tag string) io.Reader {
 		    "date_created": 1488206469,
 		    "repo_name": "${image}"
 		  }
-		}]
-		}`)
+		}
+		`)
 	envelope = strings.Replace(envelope, "${image}", image, -1)
 	envelope = strings.Replace(envelope, "${tag}", tag, -1)
 

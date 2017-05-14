@@ -11,18 +11,18 @@ import (
 
 func TestEnvelope_GetPushEventRepositories(t *testing.T) {
 
-	repositories, err := GetPushEventRepositories(getEventEnvelope())
+	repository, err := GetPushEventRepositories(getEventEnvelope())
 	assert.NoError(t, err)
-	assert.Equal(t, 1, len(repositories))
-	assert.Equal(t, "vayuadm/kube-distribution", repositories[0].Name)
-	assert.Equal(t, "master-default-ceribrouideplyment-7", repositories[0].Tag)
+	assert.NotNil(t, repository)
+	assert.Equal(t, "vayuadm/kube-distribution", repository.Name)
+	assert.Equal(t, "master-default-ceribrouideplyment-7", repository.Tag)
 }
 
 func TestEnvelope_GetPushEventRepositories_EmptyEnvelope(t *testing.T) {
 
-	repositories, err := GetPushEventRepositories(strings.NewReader("[]"))
+	repository, err := GetPushEventRepositories(strings.NewReader("{}"))
 	assert.NoError(t, err)
-	assert.Equal(t, 0, len(repositories))
+	assert.Nil(t, repository)
 }
 
 func TestEnvelope_GetPushEventRepositories_CorruptedEnvelope(t *testing.T) {
@@ -34,7 +34,7 @@ func TestEnvelope_GetPushEventRepositories_CorruptedEnvelope(t *testing.T) {
 func getEventEnvelope() io.Reader {
 
 	return strings.NewReader(strings.TrimSpace(`
-				[{
+				{
 		  "push_data": {
 		    "pushed_at": 1494748295,
 		    "images": [],
@@ -58,5 +58,5 @@ func getEventEnvelope() io.Reader {
 		    "date_created": 1488206469,
 		    "repo_name": "vayuadm/kube-distribution"
 		  }
-		}]`))
+		}`))
 }

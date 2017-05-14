@@ -26,22 +26,20 @@ func main() {
 
 func handler(writer http.ResponseWriter, request *http.Request) {
 
-	if repositories, err := GetPushEventRepositories(request.Body); err != nil {
+	if repository, err := GetPushEventRepositories(request.Body); err != nil {
 		log.Error(err)
 		writer.WriteHeader(http.StatusBadRequest)
 	} else {
-		for _, currRepository := range repositories {
-			branch, namespace, deployment, version, err := parseTag(currRepository.Tag)
-			if err != nil {
-				log.Error(err)
-				continue
-			}
+		branch, namespace, deployment, version, err := parseTag(repository.Tag)
+		if err != nil {
+			log.Error(err)
+			return
+		}
 
-			if watchBranches.Contains(branch) {
-				image := fmt.Sprintf("%s:%s", currRepository.Name, version)
-				if err := kube.UpdateDeployment(deployment, namespace, image); err != nil {
-					log.Error(err)
-				}
+		if watchBranches.Contains(branch) {
+			image := fmt.Sprintf("%s:%s", repository.Name, version)
+			if err := kube.UpdateDeployment(deployment, namespace, image); err != nil {
+				log.Error(err)
 			}
 		}
 		writer.WriteHeader(http.StatusOK)
