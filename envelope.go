@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"errors"
+	"fmt"
 	"io"
 	"strings"
 
-	"github.com/docker/distribution/notifications"
 	log "github.com/Sirupsen/logrus"
+	"github.com/docker/distribution/notifications"
 )
 
 type Repository struct {
@@ -20,7 +20,7 @@ func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
 
 	log.Info("Parsing docker registry events...")
 	var ret []Repository
-	events, err := toEvents(envelope);
+	events, err := toEvents(envelope)
 	if err == nil {
 		log.Infof("Found %d docker registry event(s)", len(events))
 		for _, currEvent := range events {
@@ -29,7 +29,7 @@ func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
 			if strings.EqualFold(currEvent.Action, "push") {
 				ret = append(ret, Repository{
 					Name: currEvent.Target.Repository,
-					Tag: currEvent.Target.Tag})
+					Tag:  currEvent.Target.Tag})
 			}
 
 		}
