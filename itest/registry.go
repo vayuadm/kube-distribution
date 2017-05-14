@@ -1,56 +1,48 @@
 package itest
 
 import (
-	"net/http"
-	"io"
-	"strings"
 	"fmt"
+	"io"
+	"net/http"
+	"strings"
 )
 
-const (
-	Push = "push"
-)
-
-func SendEvent(eventType, image, tag string) (response *http.Response, err error) {
+func SendEvent(image, tag string) (response *http.Response, err error) {
 
 	return http.Post("http://localhost:5050/events",
 		"",
-		getEventEnvelope(eventType, image, tag))
+		getEventEnvelope(image, tag))
 }
 
-func getEventEnvelope(eventType, image, tag string) io.Reader {
+func getEventEnvelope(image, tag string) io.Reader {
 
 	envelope := strings.TrimSpace(`
-		{"events": [
-		      {
-			 "id": "asdf-asdf-asdf-asdf-0",
-			 "timestamp": "2006-01-02T15:04:05Z",
-			 "action": "${method}",
-			 "target": {
-			    "mediaType": "application/vnd.docker.distribution.manifest.v1+json",
-			    "length": 1,
-			    "digest": "sha256:fea8895f450959fa676bcc1df0611ea93823a735a01205fd8622846041d0c7cf",
-			    "repository": "${image}",
-			    "tag": "${tag}",
-			    "url": "http://example.com/v2/library/test/manifests/sha256:c3b3692957d439ac1928219a83fac91e7bf96c153725526874673ae1f2023f8d5"
-			 },
-			 "request": {
-			    "id": "asdfasdf",
-			    "addr": "client.local",
-			    "host": "registrycluster.local",
-			    "method": "PUT",
-			    "useragent": "test/0.1"
-			 },
-			 "actor": {
-			    "name": "test-actor"
-			 },
-			 "source": {
-			    "addr": "hostname.local:port"
-			 }
-		      }
-		   ]
+		{[{
+		  "push_data": {
+		    "pushed_at": 1494748295,
+		    "images": [],
+		    "tag": "${tag}",
+		    "pusher": "effoeffi"
+		  },
+		  "callback_url": "https://registry.hub.docker.com/u/vayuadm/kube-distribution/hook/25i05b0gidb0j4gg4dbbe1g2hfhfi13i1/",
+		  "repository": {
+		    "status": "Active",
+		    "description": "",
+		    "is_trusted": false,
+		    "full_description": null,
+		    "repo_url": "https://hub.docker.com/r/vayuadm/kube-distribution",
+		    "owner": "vayuadm",
+		    "is_official": false,
+		    "is_private": false,
+		    "name": "kube-distribution",
+		    "namespace": "vayuadm",
+		    "star_count": 0,
+		    "comment_count": 0,
+		    "date_created": 1488206469,
+		    "repo_name": "${image}"
+		  }
+		}]
 		}`)
-	envelope = strings.Replace(envelope, "${method}", eventType, -1)
 	envelope = strings.Replace(envelope, "${image}", image, -1)
 	envelope = strings.Replace(envelope, "${tag}", tag, -1)
 

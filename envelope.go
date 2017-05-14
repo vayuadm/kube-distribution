@@ -5,49 +5,45 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/docker/distribution/notifications"
+	"github.com/vayuadm/kube-distribution/dockerhub"
 )
 
-type Repository struct {
+type DockerRepo struct {
 	Name string
 	Tag  string
 }
 
-func GetPushEventRepositories(envelope io.Reader) ([]Repository, error) {
+func GetPushEventRepositories(dockerHubMessageReader io.Reader) ([]DockerRepo, error) {
 
 	log.Info("Parsing docker registry events...")
-	var ret []Repository
-	events, err := toEvents(envelope)
+	var ret []DockerRepo
+	dockerhubMessages, err := toDockerhubMessages(dockerHubMessageReader)
 	if err == nil {
-		log.Infof("Found %d docker registry event(s)", len(events))
-		for _, currEvent := range events {
-			log.Infof("Event: %s, Image: %s:%s", currEvent.Action,
-				currEvent.Target.Repository, currEvent.Target.Tag)
-			if strings.EqualFold(currEvent.Action, "push") {
-				ret = append(ret, Repository{
-					Name: currEvent.Target.Repository,
-					Tag:  currEvent.Target.Tag})
-			}
-
+		log.Infof("Found %d dockerhub webhook message(s)", len(dockerhubMessages))
+		for _, currMessage := range dockerhubMessages {
+			log.Infof("Message: %s, Image: %s:%s", currMessage,
+				currMessage.Repository.RepoName, currMessage.PushData.Tag)
+			ret = append(ret, DockerRepo{
+				Name: currMessage.Repository.RepoName,
+				Tag:  currMessage.PushData.Tag})
 		}
 	}
 
 	return ret, err
 }
 
-func toEvents(envelopeReader io.Reader) ([]notifications.Event, error) {
+func toDockerhubMessages(dockerHubMessageReader io.Reader) ([]dockerhub.Webhook, error) {
 
-	var envelope notifications.Envelope
-	decoder := json.NewDecoder(envelopeReader)
-	err := decoder.Decode(&envelope)
+	var dockerHubMessage []dockerhub.Webhook
+	decoder := json.NewDecoder(dockerHubMessageReader)
+	err := decoder.Decode(&dockerHubMessage)
 	if err != nil {
-		message := fmt.Sprintf("Failed to decode docker registry event's envelope: %s", err)
+		message := fmt.Sprintf("Failed to decode docker hub webhook: %s", err)
 
 		return nil, errors.New(message)
 	}
 
-	return envelope.Events, nil
+	return dockerHubMessage, nil
 }

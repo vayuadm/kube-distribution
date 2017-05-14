@@ -3,15 +3,15 @@ package main
 import (
 	log "github.com/Sirupsen/logrus"
 
-	"net/http"
-	"fmt"
-	"strings"
 	"errors"
+	"fmt"
+	"net/http"
 	"os"
+	"strings"
 )
 
 var (
-	kube KubeClient
+	kube          KubeClient
 	watchBranches Set
 )
 
