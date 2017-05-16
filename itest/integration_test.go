@@ -14,7 +14,7 @@ func TestETE(t *testing.T) {
 		t.Skipf("TestETE skiped. To run it, please, add enviroment varible: %s=true", itest)
 	}
 
-	res, err := SendEvent("nginx", "master-default-nginxdeployment-1.10")
+	res, err := SendEvent("nginx", "master__default__nginxdeployment__1.10")
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, res.StatusCode)
 }
