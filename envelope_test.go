@@ -15,7 +15,7 @@ func TestEnvelope_GetPushEventRepositories(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, repository)
 	assert.Equal(t, "vayuadm/kube-distribution", repository.Name)
-	assert.Equal(t, "master-default-ceribrouideplyment-7", repository.Tag)
+	assert.Equal(t, "master--default--ceribrouideplyment--7", repository.Tag)
 }
 
 func TestEnvelope_GetPushEventRepositories_EmptyEnvelope(t *testing.T) {
@@ -38,7 +38,7 @@ func getEventEnvelope() io.Reader {
 		  "push_data": {
 		    "pushed_at": 1494748295,
 		    "images": [],
-		    "tag": "master-default-ceribrouideplyment-7",
+		    "tag": "master--default--ceribrouideplyment--7",
 		    "pusher": "effoeffi"
 		  },
 		  "callback_url": "https://registry.hub.docker.com/u/vayuadm/kube-distribution/hook/25i05b0gidb0j4gg4dbbe1g2hfhfi13i1/",

@@ -15,7 +15,7 @@ var (
 	watchBranches Set
 )
 
-const DELIMITER = "__"
+const DELIMITER = "--"
 
 func main() {
 
@@ -48,7 +48,7 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-// example tag: master__default__ceribrouideplyment__7
+// example tag: master--default--ceribrouideplyment--7
 func parseTag(tag string) (branch, namespace, deployment, version string, err error) {
 
 	ret := strings.Split(tag, DELIMITER)
