@@ -15,6 +15,8 @@ var (
 	watchBranches Set
 )
 
+const DELIMITER = "@"
+
 func main() {
 
 	kube = NewKubeClient()
@@ -46,13 +48,13 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-// example tag: master-default-ceribrouideplyment-7
+// example tag: master@default@ceribrouideplyment@7
 func parseTag(tag string) (branch, namespace, deployment, version string, err error) {
 
-	ret := strings.Split(tag, "-")
+	ret := strings.Split(tag, DELIMITER)
 	if len(ret) != 4 || ret[0] == "" || ret[1] == "" || ret[2] == "" || ret[3] == "" {
 		return "", "", "", "", errors.New(fmt.Sprintf(
-			"Failed to parse docker image tag: %s. Format should be: <branch>-<kubernetes namespace>-<kubernetes deployment name>-<version>", tag))
+			"Failed to parse docker image tag: %s. Format should be: <branch>@<kubernetes namespace>@<kubernetes deployment name>@<version>", tag))
 	}
 
 	return ret[0], ret[1], ret[2], ret[3], nil
