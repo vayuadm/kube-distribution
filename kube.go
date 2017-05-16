@@ -2,22 +2,22 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/lavalamp/client-go-flat/kubernetes"
-	"github.com/lavalamp/client-go-flat/rest"
-	"github.com/lavalamp/client-go-flat/pkg/apis/extensions/v1beta1"
 	"github.com/lavalamp/client-go-flat/apimachinery/pkg/apis/meta/v1"
+	"github.com/lavalamp/client-go-flat/kubernetes"
+	"github.com/lavalamp/client-go-flat/pkg/apis/extensions/v1beta1"
+	"github.com/lavalamp/client-go-flat/rest"
 
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"os/user"
+	"path/filepath"
 	"strings"
 )
 
 const (
-	hostUrl = "KUBERNETES_HOST"
-	caFile = "KUBERNETES_CA_FILE"
+	hostUrl     = "KUBERNETES_HOST"
+	caFile      = "KUBERNETES_CA_FILE"
 	secretToken = "KUBERNETES_TOKEN"
 )
 
@@ -37,7 +37,7 @@ func NewKubeClient() KubeClient {
 
 func (kube KubeClient) UpdateDeployment(name, namespace, image string) error {
 
-	log.Infof("Loking for deployment: %s, namespace: %s", name, namespace)
+	log.Infof("Looking for deployment: %s, namespace: %s", name, namespace)
 	deployment, err := findDeployment(name, namespace)
 	if err != nil {
 		return err
