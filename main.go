@@ -23,7 +23,7 @@ func main() {
 	watchBranches = getWatchBranches()
 
 	http.HandleFunc("/events", handler)
-	http.ListenAndServe(":5050", nil)
+	http.ListenAndServe("0.0.0.0:5050", nil)
 }
 
 func handler(writer http.ResponseWriter, request *http.Request) {
