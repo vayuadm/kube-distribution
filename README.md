@@ -5,8 +5,8 @@
 _kube-distribution_ is a process that listen to docker registry push events events,
 and automatically run updated [Kubernetes Deployment](https://kubernetes.io/docs/user-guide/deployments/) with new pushed image.
 
-Docker image tag format: {branch}__{kubernetes namespace}__{kubernetes deployment}__{version}
-(example: master__default__ceribrodeplyment__7)
+Docker image tag format: {branch}--{kubernetes namespace}--{kubernetes deployment}--{version}
+(example: master--default--ceribrodeplyment--7)
 
 ## Running _Kubernetes Distribution_ as Kubernetes Pod
 TODO
