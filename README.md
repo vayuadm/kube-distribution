@@ -8,21 +8,14 @@ and automatically run updated [Kubernetes Deployment](https://kubernetes.io/docs
 Docker image tag format: {branch}--{kubernetes namespace}--{kubernetes deployment}--{version}
 (example: master--default--ceribrodeplyment--7)
 
-## Running _Kubernetes Distribution_ as Kubernetes Pod
-TODO
-
 ## Running _Kubernetes Distribution_ inside a Docker container
 ```bash
-$ docker run -d -e KUBERNETES_HOST={Address} -e KUBERNETES_CA_FILE={ca.cert Path} -e KUBERNETES_TOKEN={authentication token} --name kube-distribution -p 5050:5050 vayuadm/kube-distribution
+$ docker run -d -e KUBERNETES_CONFIG=$HOME/.kube/config --name kube-distribution -p 5050:5050 vayuadm/kube-distribution
 ```
-- `KUBERNETES_HOST` - Kubernetes master host address (default: https://192.168.99.100:8443).
-- `KUBERNETES_CA_FILE` - path to `ca.crt` file (default: /{home dir}/.minikube/ca.crt).
-- `KUBERNETES_TOKEN` - Kubernetes authentication token.
+- `KUBERNETES_CONFIG` - Path to kube config (If empty - in-cluster configuration is assumed).
 
-Example running a _Kubernetes Distribution_ container on minikube:
-``` bash
-$ docker run -it --rm -e KUBERNETES_CA_FILE=/mnt/.minikube/ca.crt -e KUBERNETES_TOKEN=$(kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') | grep -E '^token' | cut -f2 -d':' | tr -d '\t') -v $HOME/.minikube:/mnt/.minikube -p 5050:5050 vayuadm/kube-distribution
-```
+## Running _Kubernetes Distribution_ as Kubernetes Pod
+When running inside kubernetes cluster, no need to set KUBERNETES_CONFIG environment variable as kube-distribution will load the configuration on its own.
 
 ## Building the project in OSX
 ```
