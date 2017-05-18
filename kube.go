@@ -5,7 +5,6 @@ import (
 	"github.com/lavalamp/client-go-flat/apimachinery/pkg/apis/meta/v1"
 	"github.com/lavalamp/client-go-flat/kubernetes"
 	"github.com/lavalamp/client-go-flat/pkg/apis/extensions/v1beta1"
-	"github.com/lavalamp/client-go-flat/rest"
 
 	"errors"
 	"fmt"
@@ -17,9 +16,6 @@ import (
 )
 
 const (
-	hostUrl        = "KUBERNETES_HOST"
-	caFile         = "KUBERNETES_CA_FILE"
-	secretToken    = "KUBERNETES_TOKEN"
 	kubeConfigPath = "KUBERNETES_CONFIG"
 )
 
@@ -82,26 +78,6 @@ func prepareKubeDeployment(deployment *v1beta1.Deployment, image string) *v1beta
 	return deployment
 }
 
-func getKubeConfig() *rest.Config {
-
-	host := os.Getenv(hostUrl)
-	if host == "" {
-		host = "https://192.168.99.100:8443"
-		log.Infof("%s is not defined, using %s", hostUrl, host)
-	}
-
-	token := os.Getenv(secretToken)
-	if token == "" {
-		log.Fatalf("Empty %s", secretToken)
-	}
-
-	return &rest.Config{
-		Host:            host,
-		BearerToken:     token,
-		TLSClientConfig: rest.TLSClientConfig{CAFile: getCaFile()},
-	}
-}
-
 func getConfigFile() string {
 
 	ret := os.Getenv(kubeConfigPath)
@@ -116,25 +92,7 @@ func getConfigFile() string {
 			log.Fatalf("File %s does not exists.", ret)
 		}
 	}
-	log.Infof("Kube config path: %", ret)
-
-	return ret
-}
-
-func getCaFile() string {
-
-	ret := os.Getenv(caFile)
-	if ret == "" {
-		log.Infof("%s is not defined, looking for ca.crt file in .minikube folder under home directory.", caFile)
-		usr, err := user.Current()
-		if err != nil {
-			log.Fatalln("Failed to get home directory.", err)
-		}
-		ret = filepath.Join(usr.HomeDir, ".minikube", "ca.crt")
-		if _, err := os.Stat(ret); os.IsNotExist(err) {
-			log.Fatalf("File %s does not exists.", ret)
-		}
-	}
+	log.Infof("Kube config path: %s", ret)
 
 	return ret
 }
