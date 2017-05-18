@@ -29,7 +29,7 @@ type KubeClient struct {
 
 func NewKubeClient() KubeClient {
 
-	config, err := clientcmd.BuildConfigFromFlags("", os.Getenv(kubeConfigPath))
+	config, err := clientcmd.BuildConfigFromFlags("", getConfigFile())
 	if err != nil {
 		panic(err.Error())
 	}
@@ -100,6 +100,25 @@ func getKubeConfig() *rest.Config {
 		BearerToken:     token,
 		TLSClientConfig: rest.TLSClientConfig{CAFile: getCaFile()},
 	}
+}
+
+func getConfigFile() string {
+
+	ret := os.Getenv(kubeConfigPath)
+	if ret == "" {
+		log.Infof("%s is not defined, using default location", kubeConfigPath)
+		usr, err := user.Current()
+		if err != nil {
+			log.Fatalln("Failed to get home directory.", err)
+		}
+		ret = filepath.Join(usr.HomeDir, ".kube", "config")
+		if _, err := os.Stat(ret); os.IsNotExist(err) {
+			log.Fatalf("File %s does not exists.", ret)
+		}
+	}
+	log.Infof("Kube config path: %", ret)
+
+	return ret
 }
 
 func getCaFile() string {
