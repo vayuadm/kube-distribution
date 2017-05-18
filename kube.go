@@ -10,12 +10,11 @@ import (
 	"fmt"
 	"github.com/lavalamp/client-go-flat/tools/clientcmd"
 	"os"
-	"os/user"
-	"path/filepath"
 	"strings"
 )
 
 const (
+	// use the env var when kube-distribution is running outside of cluster
 	kubeConfigPath = "KUBERNETES_CONFIG"
 )
 
@@ -25,7 +24,7 @@ type KubeClient struct {
 
 func NewKubeClient() KubeClient {
 
-	config, err := clientcmd.BuildConfigFromFlags("", "")
+	config, err := clientcmd.BuildConfigFromFlags("", getConfigFile())
 	if err != nil {
 		panic(err.Error())
 	}
@@ -82,17 +81,10 @@ func getConfigFile() string {
 
 	ret := os.Getenv(kubeConfigPath)
 	if ret == "" {
-		log.Infof("%s is not defined, using default location", kubeConfigPath)
-		usr, err := user.Current()
-		if err != nil {
-			log.Fatalln("Failed to get home directory.", err)
-		}
-		ret = filepath.Join(usr.HomeDir, ".kube", "config")
-		if _, err := os.Stat(ret); os.IsNotExist(err) {
-			log.Fatalf("File %s does not exists.", ret)
-		}
+		log.Infof("%s is not defined, assuming kube-distribution is running in-cluster mode", kubeConfigPath)
+	} else {
+		log.Infof("Kube config path: %s", ret)
 	}
-	log.Infof("Kube config path: %s", ret)
 
 	return ret
 }
