@@ -29,7 +29,7 @@ type KubeClient struct {
 
 func NewKubeClient() KubeClient {
 
-	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
+	config, err := clientcmd.BuildConfigFromFlags("", os.Getenv(kubeConfigPath))
 	if err != nil {
 		panic(err.Error())
 	}
