@@ -9,6 +9,7 @@ import (
 
 	"errors"
 	"fmt"
+	"github.com/lavalamp/client-go-flat/tools/clientcmd"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -16,9 +17,10 @@ import (
 )
 
 const (
-	hostUrl     = "KUBERNETES_HOST"
-	caFile      = "KUBERNETES_CA_FILE"
-	secretToken = "KUBERNETES_TOKEN"
+	hostUrl        = "KUBERNETES_HOST"
+	caFile         = "KUBERNETES_CA_FILE"
+	secretToken    = "KUBERNETES_TOKEN"
+	kubeConfigPath = "KUBERNETES_CONFIG"
 )
 
 type KubeClient struct {
@@ -27,7 +29,11 @@ type KubeClient struct {
 
 func NewKubeClient() KubeClient {
 
-	client, err := kubernetes.NewForConfig(getKubeConfig())
+	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
+	if err != nil {
+		panic(err.Error())
+	}
+	client, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		log.Fatal("Failed to create k8s client.", err)
 	}
