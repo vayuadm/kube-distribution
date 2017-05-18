@@ -25,7 +25,7 @@ type KubeClient struct {
 
 func NewKubeClient() KubeClient {
 
-	config, err := clientcmd.BuildConfigFromFlags("", getConfigFile())
+	config, err := clientcmd.BuildConfigFromFlags("", "")
 	if err != nil {
 		panic(err.Error())
 	}
