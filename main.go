@@ -5,11 +5,12 @@ import (
 
 	"errors"
 	"fmt"
-	"github.com/vayuadm/kube-distribution/dockerhub"
-	"github.com/vayuadm/kube-distribution/utils"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/vayuadm/kube-distribution/dockerhub"
+	"github.com/vayuadm/kube-distribution/utils"
 )
 
 var (
