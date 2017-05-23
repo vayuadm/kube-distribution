@@ -1,5 +1,5 @@
 hash: 29c71c366522cf4b573b8b7a7fd5187951893443c3b29a593e0123de5fc2872a
-updated: 2017-05-14T16:31:20.307873399+03:00
+updated: 2017-05-23T13:13:37.982872237+03:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -57,6 +57,10 @@ imports:
   - proto
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
+- name: github.com/howeyc/gopass
+  version: 3ca23474a7c7203e0a0a070fd33508f6efdb9b3d
+- name: github.com/imdario/mergo
+  version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/jonboulle/clockwork
   version: 72f9bd7c4e0c2a40055ab3d0f09654f730cce982
 - name: github.com/juju/ratelimit
@@ -162,12 +166,17 @@ imports:
   - rest
   - rest/watch
   - third_party/forked/golang/template
+  - tools/auth
+  - tools/clientcmd
   - tools/clientcmd/api
+  - tools/clientcmd/api/latest
+  - tools/clientcmd/api/v1
   - tools/metrics
   - transport
   - util/cert
   - util/clock
   - util/flowcontrol
+  - util/homedir
   - util/integer
   - util/jsonpath
 - name: github.com/mailru/easyjson
@@ -192,6 +201,10 @@ imports:
   version: 6d13cc73c294a5db33f409ac599b41597b8d9055
   subpackages:
   - dockerhub
+- name: golang.org/x/crypto
+  version: d172538b2cfce0c13cee31e647d0367aa8cd2486
+  subpackages:
+  - ssh/terminal
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
