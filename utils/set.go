@@ -1,4 +1,4 @@
-package main
+package utils
 
 // Set of strings
 // Implements "Contains" in O(1) (slice runs in O(n))
@@ -10,7 +10,7 @@ func NewSet() Set {
 	return Set{data: make(map[string]bool)}
 }
 
-func (set Set)  Add(val string) {
+func (set Set) Add(val string) {
 	set.data[val] = true
 }
 

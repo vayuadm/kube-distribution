@@ -5,6 +5,8 @@ import (
 
 	"errors"
 	"fmt"
+	"github.com/vayuadm/kube-distribution/dockerhub"
+	"github.com/vayuadm/kube-distribution/utils"
 	"net/http"
 	"os"
 	"strings"
@@ -12,7 +14,7 @@ import (
 
 var (
 	kube          KubeClient
-	watchBranches Set
+	watchBranches utils.Set
 )
 
 const DELIMITER = "--"
@@ -28,7 +30,7 @@ func main() {
 
 func handler(writer http.ResponseWriter, request *http.Request) {
 
-	if repository, err := GetPushEventRepositories(request.Body); err != nil {
+	if repository, err := dockerhub.GetPushEventRepositories(request.Body); err != nil {
 		log.Error(err)
 		writer.WriteHeader(http.StatusBadRequest)
 	} else {
@@ -60,9 +62,9 @@ func parseTag(tag string) (branch, namespace, deployment, version string, err er
 	return ret[0], ret[1], ret[2], ret[3], nil
 }
 
-func getWatchBranches() Set {
+func getWatchBranches() utils.Set {
 
-	ret := NewSet()
+	ret := utils.NewSet()
 	names := os.Getenv("WATCH_BRANCES")
 	if len(names) > 0 {
 		for _, currBranch := range strings.Split(names, ",") {

@@ -1,4 +1,4 @@
-package main
+package dockerhub
 
 import (
 	"encoding/json"
@@ -7,7 +7,6 @@ import (
 	"io"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/vayuadm/kube-distribution/dockerhub"
 )
 
 type DockerRepo struct {
@@ -20,7 +19,7 @@ func GetPushEventRepositories(dockerHubMessageReader io.Reader) (*DockerRepo, er
 	log.Info("Parsing docker registry events...")
 	var ret *DockerRepo
 	dockerhubMessage, err := toDockerhubMessage(dockerHubMessageReader)
-	if err == nil && dockerhubMessage != (dockerhub.Webhook{}) {
+	if err == nil && dockerhubMessage != (Webhook{}) {
 		log.Infof("Found dockerhub webhook message")
 		log.Infof("Message: %s, Image: %s:%s", dockerhubMessage,
 			dockerhubMessage.Repository.RepoName, dockerhubMessage.PushData.Tag)
@@ -32,14 +31,14 @@ func GetPushEventRepositories(dockerHubMessageReader io.Reader) (*DockerRepo, er
 	return ret, err
 }
 
-func toDockerhubMessage(dockerHubMessageReader io.Reader) (dockerhub.Webhook, error) {
+func toDockerhubMessage(dockerHubMessageReader io.Reader) (Webhook, error) {
 
-	var dockerHubMessage dockerhub.Webhook
+	var dockerHubMessage Webhook
 	decoder := json.NewDecoder(dockerHubMessageReader)
 	err := decoder.Decode(&dockerHubMessage)
 	if err != nil {
 		message := fmt.Sprintf("Failed to decode docker hub webhook: %s", err)
-		return dockerhub.Webhook{}, errors.New(message)
+		return Webhook{}, errors.New(message)
 	}
 
 	return dockerHubMessage, nil
