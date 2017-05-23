@@ -6,11 +6,11 @@ import (
 	"github.com/lavalamp/client-go-flat/kubernetes"
 	"github.com/lavalamp/client-go-flat/pkg/apis/extensions/v1beta1"
 
-	"errors"
 	"fmt"
-	"github.com/lavalamp/client-go-flat/tools/clientcmd"
 	"os"
 	"strings"
+
+	"github.com/lavalamp/client-go-flat/tools/clientcmd"
 )
 
 const (
@@ -46,7 +46,7 @@ func (kube KubeClient) UpdateDeployment(name, namespace, image string) error {
 
 	log.Infof("Updating deployment: %s image to %s (namespace: %s)", name, image, namespace)
 	if _, err := kube.api.Deployments(namespace).Update(prepareKubeDeployment(deployment, image)); err != nil {
-		return errors.New(fmt.Sprintf("Failed to update deployment: %s (namespace: %s, image: %s). %v", name, namespace, image, err))
+		return fmt.Errorf("Failed to update deployment: %s (namespace: %s, image: %s). %v", name, namespace, image, err)
 	}
 	log.Infof("Deployment %s has been updated to image %s (namespace %s)", name, image, namespace)
 
@@ -57,7 +57,7 @@ func findDeployment(name, namespace string) (*v1beta1.Deployment, error) {
 
 	deployments, err := kube.api.Deployments(namespace).List(v1.ListOptions{})
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Failed to get deployments. %v", err))
+		return nil, fmt.Errorf("Failed to get deployments. %v", err)
 	}
 	for _, currDeployment := range deployments.Items {
 		if strings.EqualFold(currDeployment.Name, name) {
@@ -65,7 +65,7 @@ func findDeployment(name, namespace string) (*v1beta1.Deployment, error) {
 		}
 	}
 
-	return nil, errors.New(fmt.Sprintf("Deployment %s not found (namespace: %s).", name, namespace))
+	return nil, fmt.Errorf("Deployment %s not found (namespace: %s).", name, namespace)
 }
 
 func prepareKubeDeployment(deployment *v1beta1.Deployment, image string) *v1beta1.Deployment {

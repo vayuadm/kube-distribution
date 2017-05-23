@@ -3,7 +3,6 @@ package main
 import (
 	log "github.com/Sirupsen/logrus"
 
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -18,7 +17,7 @@ var (
 	watchBranches utils.Set
 )
 
-const DELIMITER = "--"
+const delimiter = "--"
 
 func main() {
 
@@ -54,10 +53,10 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 // example tag: master--default--ceribrouideplyment--7
 func parseTag(tag string) (branch, namespace, deployment, version string, err error) {
 
-	ret := strings.Split(tag, DELIMITER)
+	ret := strings.Split(tag, delimiter)
 	if len(ret) != 4 || ret[0] == "" || ret[1] == "" || ret[2] == "" || ret[3] == "" {
-		return "", "", "", "", errors.New(fmt.Sprintf(
-			"Failed to parse docker image tag: %s. Format should be: <branch>%s<kubernetes namespace>%s<kubernetes deployment name>%s<version>", tag, DELIMITER, DELIMITER, DELIMITER))
+		return "", "", "", "", fmt.Errorf(
+			"Failed to parse docker image tag: %s. Format should be: <branch>%s<kubernetes namespace>%s<kubernetes deployment name>%s<version>", tag, delimiter, delimiter, delimiter)
 	}
 
 	return ret[0], ret[1], ret[2], ret[3], nil
