@@ -9,9 +9,9 @@ import (
 
 func TestETE(t *testing.T) {
 
-	const itest = "INTEGRATION_TESTS"
-	if os.Getenv(itest) != "true" {
-		t.Skipf("TestETE skiped. To run it, please, add environment variable: %s=true", itest)
+	const iTest = "INTEGRATION_TESTS"
+	if os.Getenv(iTest) != "true" {
+		t.Skipf("TestETE skipped. To run it, please, add environment variable: %s=true", iTest)
 	}
 
 	res, err := SendEvent("nginx", "master--default--nginxdeployment--1.10")
